@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { SpawnPoint, CampusZone } from '../../types';
 import { getTurfDistanceMeters, gpsToSvg } from '../../lib/geo';
 import { CampusIllustrationLayer, CampusIllustrationDefs } from './CampusIllustrationLayer';
-import { CampusLandmark, getLandmarkById } from '../../data/landmarks';
+import { CampusLandmark, getLandmarkById, getSvgHighlightTargetId } from '../../data/landmarks';
 
 // ---------------------------------------------------------------------------
 // Types & Processed Models
@@ -230,7 +230,7 @@ export const CampusMapCanvas: React.FC<CampusMapCanvasProps> = React.memo(({
       if (svgRef.current && zoomBehaviorRef.current && containerRef.current) {
         const width = containerRef.current.clientWidth || 375;
         const height = containerRef.current.clientHeight || 600;
-        const scale = 1.05;
+        const scale = 1.1;
         const targetX = width / 2 - landmark.svgX * scale;
         const targetY = height / 2 - landmark.svgY * scale;
 
@@ -632,42 +632,22 @@ export const CampusMapCanvas: React.FC<CampusMapCanvasProps> = React.memo(({
           {/* Layer 2: Optional Zone Tint Layer (10-14% opacity, transparent fills, thin #F16321 dashed outline) */}
           <CampusZonesLayer zones={zones} showZoneOverlay={showZoneOverlay} />
 
-          {/* Layer 3: Tapped-Landmark Highlight (Active #F16321 outline & glow sitting cleanly above base and zones) */}
+          {/* Layer 3: Tapped-Landmark Highlight (Active 3px #F16321 outline & subtle halo sitting cleanly above base and zones) */}
           <g id="tapped-landmark-highlight" className="pointer-events-none" style={{ pointerEvents: 'none' }}>
             {selectedLandmarkId && (
               <g className="pointer-events-none">
                 {/* Active vector outline overlay */}
                 <use
-                  href={`#${selectedLandmarkId}`}
+                  href={`#${getSvgHighlightTargetId(selectedLandmarkId)}`}
                   fill="none"
                   stroke="#F16321"
-                  strokeWidth="5"
+                  strokeWidth="3"
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   filter="url(#landmark-glow-filter)"
                   className="pointer-events-none"
                   style={{ pointerEvents: 'none' }}
                 />
-                {/* Focused landmark centroid reticle badge */}
-                {selectedLandmarkObj && (
-                  <g
-                    transform={`translate(${selectedLandmarkObj.svgX}, ${selectedLandmarkObj.svgY})`}
-                    className="pointer-events-none"
-                    style={{ pointerEvents: 'none' }}
-                  >
-                    <circle
-                      r="32"
-                      fill="none"
-                      stroke="#F16321"
-                      strokeWidth="2"
-                      strokeDasharray="4,4"
-                      className="animate-spin"
-                      style={{ animationDuration: '8s' }}
-                    />
-                    <circle r="6" fill="#F16321" />
-                    <circle r="2" fill="#FAF4EB" />
-                  </g>
-                )}
               </g>
             )}
           </g>

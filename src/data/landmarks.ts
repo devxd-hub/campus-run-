@@ -488,8 +488,8 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
 
   // Canonical Aliases for Flexible Referencing
   'academic-block': {
-    id: 'Vector 12',
-    name: 'Academic Block A (Core)',
+    id: 'academic-block',
+    name: 'Academic Block',
     category: 'academic',
     categoryLabel: 'ACADEMIC COMPLEX',
     code: 'ACAD-01',
@@ -499,8 +499,8 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
     zoneId: 'zone-academic-core',
   },
   'b-block': {
-    id: 'Vector 35',
-    name: 'B-Block (Engineering Lab)',
+    id: 'b-block',
+    name: 'B-Block',
     category: 'academic',
     categoryLabel: 'ENGINEERING LABS',
     code: 'ENG-B',
@@ -511,7 +511,7 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
   },
   'e-block': {
     id: 'eblock',
-    name: 'E-Block (Electronics & Robotics)',
+    name: 'E-Block',
     category: 'academic',
     categoryLabel: 'DEPARTMENT BLOCK',
     code: 'DEP-E',
@@ -521,8 +521,30 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
     zoneId: 'zone-central-blocks',
   },
   'g-block': {
-    id: 'sc-block',
-    name: 'G-Block / SC Complex',
+    id: 'G-block',
+    name: 'G-Block',
+    category: 'academic',
+    categoryLabel: 'STUDENT CENTER',
+    code: 'SC-G',
+    description: 'Student clubs, society rooms, and collaborative maker lounge.',
+    svgX: 760,
+    svgY: 1185,
+    zoneId: 'zone-central-blocks',
+  },
+  'G-block': {
+    id: 'G-block',
+    name: 'G-Block',
+    category: 'academic',
+    categoryLabel: 'STUDENT CENTER',
+    code: 'SC-G',
+    description: 'Student clubs, society rooms, and collaborative maker lounge.',
+    svgX: 760,
+    svgY: 1185,
+    zoneId: 'zone-central-blocks',
+  },
+  'G-Block': {
+    id: 'G-block',
+    name: 'G-Block',
     category: 'academic',
     categoryLabel: 'STUDENT CENTER',
     code: 'SC-G',
@@ -532,11 +554,11 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
     zoneId: 'zone-central-blocks',
   },
   auditorium: {
-    id: 'Vector 18',
-    name: 'North Dining Pavilion & Auditorium',
+    id: 'auditorium',
+    name: 'Auditorium',
     category: 'dining',
-    categoryLabel: 'DINING & PAVILION',
-    code: 'DIN-01',
+    categoryLabel: 'AUDITORIUM & DINING',
+    code: 'AUD-01',
     description: 'Main residential dining commons with connected auditorium foyer.',
     svgX: 568,
     svgY: 375,
@@ -566,7 +588,7 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
   },
   'indoor-stadium': {
     id: 'indoor stadium',
-    name: 'Indoor Sports Stadium',
+    name: 'Indoor Stadium',
     category: 'sports',
     categoryLabel: 'SPORTS ARENA',
     code: 'STA-01',
@@ -577,7 +599,7 @@ export const CAMPUS_LANDMARKS: Record<string, CampusLandmark> = {
   },
   'football court 2': {
     id: 'football-court2',
-    name: 'Football Court 2 (South Arena)',
+    name: 'Football Court 2',
     category: 'sports',
     categoryLabel: 'ATHLETICS FIELD',
     code: 'FT-02',
@@ -606,6 +628,87 @@ export function getLandmarkById(id: string): CampusLandmark | null {
   }
 
   return null;
+}
+
+/**
+ * Maps any user/code landmark ID to the physical SVG element ID that should be highlighted
+ */
+export function getSvgHighlightTargetId(landmarkId: string): string {
+  const map: Record<string, string> = {
+    bh1: 'bh2',
+    bh2: 'bh2',
+    bh3: 'bh2',
+    bh4: 'bh5',
+    bh5: 'bh5',
+    bh6: 'bh6',
+    'Vector 25': 'bh6',
+    bh7: 'bh7',
+    bh8: 'bh8',
+    BH8: 'bh8',
+    bh9: 'bh9',
+    bh10: 'bh10',
+    bh11: 'bh12',
+    bh12: 'bh12',
+    lh1: 'lh1',
+    lh4: 'lh1',
+    lh2: 'lh2',
+    lh3: 'lh3',
+    lh5: 'lh5',
+    'academic-block': 'academic-block',
+    'Vector 12': 'academic-block',
+    'b-block': 'b-block',
+    'Vector 35': 'b-block',
+    'c-block': 'c-block',
+    'd-block': 'd-block',
+    eblock: 'eblock',
+    'e-block': 'eblock',
+    'f-block': 'f-block',
+    'G-block': 'G-block',
+    'g-block': 'G-block',
+    'sc-block': 'G-block',
+    library: 'library',
+    'food-court': 'food-court',
+    auditorium: 'auditorium',
+    'Vector 18': 'auditorium',
+    gym: 'gym',
+    'indoor stadium': 'indoor stadium',
+    'indoor-stadium': 'indoor stadium',
+    'cricket-court1': 'cricket-court1',
+    'football-court1': 'football-court1',
+    'football-court2': 'football-court2',
+    'center of datascience': 'center of datascience',
+    'center-of-datascience': 'center of datascience',
+  };
+  return map[landmarkId] || landmarkId;
+}
+
+/**
+ * Find the single nearest active spawn to a landmark
+ */
+export function getNearestActiveSpawn(
+  landmark: CampusLandmark,
+  spawns: SpawnPoint[]
+): { spawn: SpawnPoint; distanceMeters: number } | null {
+  const activeSpawns = spawns.filter((s) => s.status === 'active' && s.enabled !== false);
+  if (activeSpawns.length === 0) return null;
+
+  let bestSpawn: SpawnPoint | null = null;
+  let minDistance = Infinity;
+
+  for (const spawn of activeSpawns) {
+    const dx = spawn.svgX - landmark.svgX;
+    const dy = spawn.svgY - landmark.svgY;
+    const dist = Math.hypot(dx, dy);
+    if (dist < minDistance) {
+      minDistance = dist;
+      bestSpawn = spawn;
+    }
+  }
+
+  if (!bestSpawn) return null;
+  // SVG coords to real-world meters approximation (~0.35m per SVG coordinate unit)
+  const approxMeters = Math.max(12, Math.round(minDistance * 0.35));
+  return { spawn: bestSpawn, distanceMeters: approxMeters };
 }
 
 /**

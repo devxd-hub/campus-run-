@@ -12,6 +12,7 @@ export interface BottomSheetProps {
   children: React.ReactNode;
   maxHeight?: string;
   showHandle?: boolean;
+  hasBackdrop?: boolean;
 }
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -23,6 +24,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   children,
   maxHeight = 'max-h-[85vh]',
   showHandle = true,
+  hasBackdrop = true,
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
 
@@ -40,16 +42,18 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[50] flex flex-col justify-end overflow-hidden">
+        <div className={cn("fixed inset-0 z-[50] flex flex-col justify-end overflow-hidden", !hasBackdrop && "pointer-events-none")}>
           {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-[#1A1310]/50 backdrop-blur-[2px]"
-          />
+          {hasBackdrop && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={onClose}
+              className="absolute inset-0 bg-[#1A1310]/50 backdrop-blur-[2px]"
+            />
+          )}
 
           {/* Drawer / Sheet Panel */}
           <motion.div
@@ -59,7 +63,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
             className={cn(
-              'relative z-10 w-full bg-[#FAF4EB] text-[#1A1310] rounded-t-2xl border-t border-[#EADBC8] shadow-2xl flex flex-col overflow-hidden',
+              'relative z-10 w-full bg-[#FAF4EB] text-[#1A1310] rounded-t-2xl border-t border-[#EADBC8] shadow-2xl flex flex-col overflow-hidden pointer-events-auto',
               maxHeight
             )}
           >

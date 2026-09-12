@@ -8,7 +8,7 @@ import { LandmarkDetailSheet } from '../../components/gameplay/LandmarkDetailShe
 import { ClaimConfirmationModal } from '../../components/gameplay/ClaimConfirmationModal';
 import { ClaimResult } from '../../services/types';
 import { getTurfDistanceMeters, getNearestSpawn, gpsToSvg } from '../../lib/geo';
-import { CampusLandmark, getNearbySpawnsForLandmark } from '../../data/landmarks';
+import { CampusLandmark, getNearbySpawnsForLandmark, getNearestActiveSpawn } from '../../data/landmarks';
 import { MAP_PALETTE } from '../../styles/tokens';
 import {
   Locate,
@@ -329,15 +329,17 @@ export const MapPage: React.FC<MapPageProps> = ({
         )}
       </div>
 
-      {/* Selected Landmark Detail Bottom Sheet */}
+      {/* Selected Landmark Detail Bottom Sheet (Non-modal with hasBackdrop={false} so spawn pins and bare map win tap priority) */}
       {selectedLandmark && !selectedSpawn && (
         <BottomSheet
           isOpen={true}
           onClose={() => setSelectedLandmark(null)}
-          title={selectedLandmark.name}
+          hasBackdrop={false}
+          showHandle={true}
         >
           <LandmarkDetailSheet
             landmark={selectedLandmark}
+            nearestSpawn={getNearestActiveSpawn(selectedLandmark, spawns)}
             nearbySpawns={getNearbySpawnsForLandmark(selectedLandmark, spawns)}
             playerLat={playerLat}
             playerLng={playerLng}
