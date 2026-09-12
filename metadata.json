@@ -1,0 +1,7 @@
+{
+  "name": "Project I9",
+  "description": "Campus-wide location-based point-spawn game built on a mobile-first vector map architecture.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
