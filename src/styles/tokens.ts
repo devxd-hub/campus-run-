@@ -132,20 +132,25 @@ export const Z_INDEX = {
  * - gold: #D9A441
  * - aqua: #30CFCF
  * 
- * Reserved for Active Game State:
+ * Reserved strictly for active game state (never used to recolor buildings):
  * - #F16321: spawn pins, current location, claim CTA, and selected landmark outline
  */
 export const MAP_PALETTE = {
   // Line & Base
   outline: '#000000',
   campusBase: '#F8F3EA',
+  campusBaseCream: '#FBF6EE',
   campusBaseAlt: '#FBF6EE',
 
   // Architectural & Ground Fills from Group 2-2.svg
   lawn: '#9ACA4E',
   terracotta: '#C97B5C',
   blueGrey: '#5B7C99',
+  'blue-grey': '#5B7C99',
+  blue_grey: '#5B7C99',
   sportsGreen: '#7A9B76',
+  'sports-green': '#7A9B76',
+  sports_green: '#7A9B76',
   lavender: '#A78BA8',
   pink: '#F5B4E3',
   gold: '#D9A441',
@@ -155,6 +160,10 @@ export const MAP_PALETTE = {
   // Reserved strictly for active game state
   activeGameState: {
     highlight: '#F16321', // Spawn pins, current location, claim CTA, selected landmark outline
+    spawnPins: '#F16321',
+    currentLocation: '#F16321',
+    claimCta: '#F16321',
+    selectedLandmarkOutline: '#F16321',
     glow: 'rgba(241, 99, 33, 0.85)',
   },
 
@@ -162,6 +171,7 @@ export const MAP_PALETTE = {
   categories: {
     hostel: {
       fill: '#C97B5C',
+      outline: '#000000',
       color: '#9C5538',
       bg: '#FAF0EB',
       border: '#E8D0C5',
@@ -170,6 +180,7 @@ export const MAP_PALETTE = {
     },
     lecture_hall: {
       fill: '#F5B4E3',
+      outline: '#000000',
       color: '#B04B92',
       bg: '#FDF2FA',
       border: '#F6CEE9',
@@ -178,6 +189,7 @@ export const MAP_PALETTE = {
     },
     academic: {
       fill: '#5B7C99',
+      outline: '#000000',
       color: '#3B5974',
       bg: '#EFF4F8',
       border: '#C5D6E4',
@@ -186,6 +198,7 @@ export const MAP_PALETTE = {
     },
     sports: {
       fill: '#7A9B76',
+      outline: '#000000',
       color: '#497345',
       bg: '#EFF6EE',
       border: '#C8DEC6',
@@ -194,6 +207,7 @@ export const MAP_PALETTE = {
     },
     dining: {
       fill: '#D9A441',
+      outline: '#000000',
       color: '#966B14',
       bg: '#FDF8EC',
       border: '#F3E1B8',
@@ -202,6 +216,7 @@ export const MAP_PALETTE = {
     },
     facility: {
       fill: '#A78BA8',
+      outline: '#000000',
       color: '#654D69',
       bg: '#F6F2F7',
       border: '#DACFE0',
@@ -210,6 +225,7 @@ export const MAP_PALETTE = {
     },
     admin: {
       fill: '#5B7C99',
+      outline: '#000000',
       color: '#3B5974',
       bg: '#EFF4F8',
       border: '#C5D6E4',
@@ -218,6 +234,7 @@ export const MAP_PALETTE = {
     },
     lawn: {
       fill: '#9ACA4E',
+      outline: '#000000',
       color: '#5C8222',
       bg: '#F3F9EA',
       border: '#D0E6B0',
@@ -226,6 +243,7 @@ export const MAP_PALETTE = {
     },
     transit: {
       fill: '#30CFCF',
+      outline: '#000000',
       color: '#158484',
       bg: '#EAF9F9',
       border: '#B3ECEC',
@@ -233,6 +251,23 @@ export const MAP_PALETTE = {
       description: 'Electric mobility & solar charging bays',
     },
   },
+} as const;
+
+export const MAP_COLORS = {
+  outline: MAP_PALETTE.outline,
+  campusBase: MAP_PALETTE.campusBase,
+  campusBaseCream: MAP_PALETTE.campusBaseCream,
+  lawn: MAP_PALETTE.lawn,
+  terracotta: MAP_PALETTE.terracotta,
+  blueGrey: MAP_PALETTE.blueGrey,
+  'blue-grey': MAP_PALETTE['blue-grey'],
+  sportsGreen: MAP_PALETTE.sportsGreen,
+  'sports-green': MAP_PALETTE['sports-green'],
+  lavender: MAP_PALETTE.lavender,
+  pink: MAP_PALETTE.pink,
+  gold: MAP_PALETTE.gold,
+  aqua: MAP_PALETTE.aqua,
+  activeState: MAP_PALETTE.activeGameState.highlight,
 } as const;
 
 export type MapPaletteCategoryKey = keyof typeof MAP_PALETTE.categories;

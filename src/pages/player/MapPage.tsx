@@ -392,10 +392,38 @@ export const MapPage: React.FC<MapPageProps> = ({
       >
         <div className="flex flex-col gap-3 pb-2 text-[#1A1310]">
           <p className="text-xs text-[#70625B]">
-            Architectural category fills sourced strictly from{' '}
+            Base & Architectural category fills sourced strictly from{' '}
             <span className="font-mono text-[#1A1310] font-bold">Group 2-2.svg</span>:
           </p>
-          <div className="grid grid-cols-2 gap-2 mt-1">
+          <div className="grid grid-cols-2 gap-2 mt-0.5">
+            <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#F8F3EA] border-[#EADBC8]">
+              <div
+                className="w-5 h-5 rounded-lg shrink-0 border border-[#1A1310]/30 shadow-2xs"
+                style={{ backgroundColor: MAP_PALETTE.campusBase }}
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
+                  Campus Base
+                </span>
+                <span className="text-[10px] font-mono text-[#70625B]">
+                  #F8F3EA / #FBF6EE
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#FAF4EB] border-[#EADBC8]">
+              <div
+                className="w-5 h-5 rounded-lg shrink-0 border border-white shadow-2xs"
+                style={{ backgroundColor: MAP_PALETTE.outline }}
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
+                  Vector Outline
+                </span>
+                <span className="text-[10px] font-mono text-[#70625B]">
+                  #000000
+                </span>
+              </div>
+            </div>
             {Object.entries(MAP_PALETTE.categories).map(([key, cat]) => (
               <div
                 key={key}

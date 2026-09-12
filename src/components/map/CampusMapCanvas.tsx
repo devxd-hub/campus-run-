@@ -582,7 +582,7 @@ export const CampusMapCanvas: React.FC<CampusMapCanvasProps> = React.memo(({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full bg-[#F4EFE6] overflow-hidden select-none cursor-grab active:cursor-grabbing touch-none"
+      className="relative w-full h-full bg-[#F8F3EA] overflow-hidden select-none cursor-grab active:cursor-grabbing touch-none"
       onClick={() => {
         onSelectLandmark?.(null);
         onMapClick?.();
