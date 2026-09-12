@@ -76,15 +76,17 @@ const CampusZonesLayer = React.memo<CampusZonesLayerProps>(({ zones, showZoneOve
   if (!showZoneOverlay) return null;
 
   return (
-    <g id="campus-zones" opacity="0.35" className="pointer-events-none" style={{ pointerEvents: 'none' }}>
+    <g id="campus-zones" className="pointer-events-none" style={{ pointerEvents: 'none' }}>
       {zones.map((zone) => (
         <g key={zone.id} className="pointer-events-none" style={{ pointerEvents: 'none' }}>
+          {/* Layer 2: Optional zone tint at 10–14% opacity with transparent fill and thin #F16321 dashed outline */}
           <path
             d={zone.svgPath}
-            fill="#FBEEE1"
+            fill="#F16321"
+            fillOpacity={0.12}
             stroke="#F16321"
-            strokeWidth="3"
-            strokeDasharray="8,6"
+            strokeWidth="1.5"
+            strokeDasharray="6,4"
             className="pointer-events-none"
             style={{ pointerEvents: 'none' }}
           />
@@ -92,8 +94,9 @@ const CampusZonesLayer = React.memo<CampusZonesLayerProps>(({ zones, showZoneOve
             x={zone.centerSvgX}
             y={zone.centerSvgY - 120}
             textAnchor="middle"
-            fill="#70625B"
-            fontSize="22"
+            fill="#1A1310"
+            fillOpacity="0.45"
+            fontSize="18"
             fontWeight="bold"
             letterSpacing="3"
             className="font-display uppercase pointer-events-none select-none"
@@ -245,6 +248,11 @@ export const CampusMapCanvas: React.FC<CampusMapCanvasProps> = React.memo(({
 
   // Convert player GPS to SVG coordinates
   const playerSvg = useMemo(() => gpsToSvg(playerLat, playerLng), [playerLat, playerLng]);
+
+  // Selected landmark metadata for active highlight overlay
+  const selectedLandmarkObj = useMemo(() => {
+    return selectedLandmarkId ? getLandmarkById(selectedLandmarkId) : null;
+  }, [selectedLandmarkId]);
 
   // -------------------------------------------------------------------------
   // 1. Data Processing & Memoization
@@ -615,19 +623,59 @@ export const CampusMapCanvas: React.FC<CampusMapCanvasProps> = React.memo(({
 
         {/* Master Scalable/Pannable Layer (Hardware Accelerated) */}
         <g ref={gRef} id="campus-world" style={{ willChange: 'transform', transformOrigin: '0 0' }}>
-          {/* Canonical Campus Illustration Layer (MAP SVG/Group 2-2.svg) - Single Visual Source of Truth */}
+          {/* Layer 1: Canonical Full SVG Base Map (MAP SVG/Group 2-2.svg) */}
           <CampusIllustrationLayer
             selectedLandmarkId={selectedLandmarkId}
             onSelectLandmark={handleSelectBuilding}
           />
 
-          {/* Memoized Campus Zone Boundaries */}
+          {/* Layer 2: Optional Zone Tint Layer (10-14% opacity, transparent fills, thin #F16321 dashed outline) */}
           <CampusZonesLayer zones={zones} showZoneOverlay={showZoneOverlay} />
 
-          {/* D3 Differential Rendered Spawn Points Layer */}
+          {/* Layer 3: Tapped-Landmark Highlight (Active #F16321 outline & glow sitting cleanly above base and zones) */}
+          <g id="tapped-landmark-highlight" className="pointer-events-none" style={{ pointerEvents: 'none' }}>
+            {selectedLandmarkId && (
+              <g className="pointer-events-none">
+                {/* Active vector outline overlay */}
+                <use
+                  href={`#${selectedLandmarkId}`}
+                  fill="none"
+                  stroke="#F16321"
+                  strokeWidth="5"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  filter="url(#landmark-glow-filter)"
+                  className="pointer-events-none"
+                  style={{ pointerEvents: 'none' }}
+                />
+                {/* Focused landmark centroid reticle badge */}
+                {selectedLandmarkObj && (
+                  <g
+                    transform={`translate(${selectedLandmarkObj.svgX}, ${selectedLandmarkObj.svgY})`}
+                    className="pointer-events-none"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    <circle
+                      r="32"
+                      fill="none"
+                      stroke="#F16321"
+                      strokeWidth="2"
+                      strokeDasharray="4,4"
+                      className="animate-spin"
+                      style={{ animationDuration: '8s' }}
+                    />
+                    <circle r="6" fill="#F16321" />
+                    <circle r="2" fill="#FAF4EB" />
+                  </g>
+                )}
+              </g>
+            )}
+          </g>
+
+          {/* Layer 4: D3 Differential Rendered Spawn Points Layer */}
           <g ref={spawnsLayerRef} id="spawn-points" />
 
-          {/* Player Location Marker with Live Pulsing Radar Ring */}
+          {/* Layer 5: Player Location Marker with Live Pulsing Radar Ring */}
           <PlayerMarkerLayer svgX={playerSvg.x} svgY={playerSvg.y} />
         </g>
       </svg>

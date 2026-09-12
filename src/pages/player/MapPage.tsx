@@ -13,7 +13,6 @@ import { MAP_PALETTE } from '../../styles/tokens';
 import {
   Locate,
   Layers,
-  Palette,
   Plus,
   Minus,
   Footprints,
@@ -194,26 +193,13 @@ export const MapPage: React.FC<MapPageProps> = ({
 
         {/* Right Controls */}
         <div className="pointer-events-auto flex items-center gap-2">
-          {/* Map Palette Legend Toggle */}
+          {/* Map Layers & Legend Button */}
           <button
             onClick={() => setShowLegend(!showLegend)}
-            title="Campus Vector Map Legend"
-            className={`p-2 rounded-xl border shadow-xs transition-colors ${
+            title="Map Layers & Landmark Legend"
+            className={`p-2 rounded-xl border shadow-xs transition-colors flex items-center gap-1.5 ${
               showLegend
-                ? 'bg-[#1A1310] text-[#FAF4EB] border-[#1A1310]'
-                : 'bg-[#FAF4EB] text-[#70625B] border-[#EADBC8] hover:text-[#1A1310]'
-            }`}
-          >
-            <Palette className="w-4 h-4" />
-          </button>
-
-          {/* Zone Overlay Toggle */}
-          <button
-            onClick={() => setShowZoneOverlay(!showZoneOverlay)}
-            title="Toggle Campus Zones"
-            className={`p-2 rounded-xl border shadow-xs transition-colors ${
-              showZoneOverlay
-                ? 'bg-[#FBEEE1] text-[#F16321] border-[#EADBC8]'
+                ? 'bg-[#FBEEE1] text-[#F16321] border-[#F16321]'
                 : 'bg-[#FAF4EB] text-[#70625B] border-[#EADBC8] hover:text-[#1A1310]'
             }`}
           >
@@ -384,71 +370,115 @@ export const MapPage: React.FC<MapPageProps> = ({
         </BottomSheet>
       )}
 
-      {/* Screen 03d: Campus Vector Map Palette Legend */}
+      {/* Screen 03d: Unobtrusive Map Layers & Native Landmark Legend */}
       <BottomSheet
         isOpen={showLegend}
         onClose={() => setShowLegend(false)}
-        title="Campus Map Palette Legend"
+        title="Map Layers & Legend"
       >
-        <div className="flex flex-col gap-3 pb-2 text-[#1A1310]">
-          <p className="text-xs text-[#70625B]">
-            Base & Architectural category fills sourced strictly from{' '}
-            <span className="font-mono text-[#1A1310] font-bold">Group 2-2.svg</span>:
-          </p>
-          <div className="grid grid-cols-2 gap-2 mt-0.5">
-            <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#F8F3EA] border-[#EADBC8]">
-              <div
-                className="w-5 h-5 rounded-lg shrink-0 border border-[#1A1310]/30 shadow-2xs"
-                style={{ backgroundColor: MAP_PALETTE.campusBase }}
-              />
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
-                  Campus Base
-                </span>
-                <span className="text-[10px] font-mono text-[#70625B]">
-                  #F8F3EA / #FBF6EE
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#FAF4EB] border-[#EADBC8]">
-              <div
-                className="w-5 h-5 rounded-lg shrink-0 border border-white shadow-2xs"
-                style={{ backgroundColor: MAP_PALETTE.outline }}
-              />
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
-                  Vector Outline
-                </span>
-                <span className="text-[10px] font-mono text-[#70625B]">
-                  #000000
-                </span>
-              </div>
-            </div>
-            {Object.entries(MAP_PALETTE.categories).map(([key, cat]) => (
-              <div
-                key={key}
-                className="flex items-center gap-2.5 p-2 rounded-xl border"
-                style={{ backgroundColor: cat.bg, borderColor: cat.border }}
-              >
-                <div
-                  className="w-5 h-5 rounded-lg shrink-0 border border-black/30 shadow-2xs"
-                  style={{ backgroundColor: cat.fill }}
-                />
-                <div className="flex flex-col min-w-0">
-                  <span
-                    className="text-xs font-bold font-display leading-tight"
-                    style={{ color: cat.color }}
-                  >
-                    {cat.name}
+        <div className="flex flex-col gap-4 pb-2 text-[#1A1310]">
+          {/* Layer Toggles */}
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#70625B] font-mono">
+              Map Layers
+            </span>
+            <div className="flex items-center justify-between p-3 rounded-2xl border border-[#EADBC8] bg-[#FAF4EB]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#FBEEE1] border border-[#EADBC8] flex items-center justify-center text-[#F16321]">
+                  <Layers className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-[#1A1310] font-display">
+                    Campus Zones Overlay
                   </span>
-                  <span className="text-[10px] font-mono text-[#70625B] truncate">
-                    {cat.fill}
+                  <span className="text-[10px] text-[#70625B] font-body">
+                    12% tint & thin #F16321 dashed outline
                   </span>
                 </div>
               </div>
-            ))}
+              <button
+                type="button"
+                role="switch"
+                aria-checked={showZoneOverlay}
+                onClick={() => setShowZoneOverlay(!showZoneOverlay)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  showZoneOverlay ? 'bg-[#F16321]' : 'bg-[#EADBC8]'
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    showZoneOverlay ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </div>
           </div>
-          <div className="mt-2 p-2.5 rounded-xl bg-[#FFF8F2] border border-[#F16321]/30 flex items-center justify-between gap-3">
+
+          {/* Native Landmark Categories Section */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#70625B] font-mono">
+                Native Landmark Colors
+              </span>
+              <span className="text-[10px] font-mono text-[#70625B]">Group 2-2.svg</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#F8F3EA] border-[#EADBC8]">
+                <div
+                  className="w-5 h-5 rounded-lg shrink-0 border border-[#1A1310]/30 shadow-2xs"
+                  style={{ backgroundColor: MAP_PALETTE.campusBase }}
+                />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
+                    Campus Base
+                  </span>
+                  <span className="text-[10px] font-mono text-[#70625B]">
+                    #F8F3EA
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2.5 p-2 rounded-xl border bg-[#FAF4EB] border-[#EADBC8]">
+                <div
+                  className="w-5 h-5 rounded-lg shrink-0 border border-black shadow-2xs"
+                  style={{ backgroundColor: MAP_PALETTE.outline }}
+                />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-bold font-display leading-tight text-[#1A1310]">
+                    Boundaries
+                  </span>
+                  <span className="text-[10px] font-mono text-[#70625B]">
+                    #000000
+                  </span>
+                </div>
+              </div>
+              {Object.entries(MAP_PALETTE.categories).map(([key, cat]) => (
+                <div
+                  key={key}
+                  className="flex items-center gap-2.5 p-2 rounded-xl border"
+                  style={{ backgroundColor: cat.bg, borderColor: cat.border }}
+                >
+                  <div
+                    className="w-5 h-5 rounded-lg shrink-0 border border-black/30 shadow-2xs"
+                    style={{ backgroundColor: cat.fill }}
+                  />
+                  <div className="flex flex-col min-w-0">
+                    <span
+                      className="text-xs font-bold font-display leading-tight truncate"
+                      style={{ color: cat.color }}
+                    >
+                      {cat.name}
+                    </span>
+                    <span className="text-[10px] font-mono text-[#70625B] truncate">
+                      {cat.fill}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Active Game State Callout */}
+          <div className="p-3 rounded-2xl bg-[#FFF8F2] border border-[#F16321]/30 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <div
                 className="w-5 h-5 rounded-lg shrink-0 border border-[#D44E11] shadow-2xs"
@@ -458,12 +488,12 @@ export const MapPage: React.FC<MapPageProps> = ({
                 <span className="text-xs font-bold font-display text-[#D44E11]">
                   Active Game State
                 </span>
-                <span className="text-[10px] text-[#70625B]">
-                  Spawn pins, player radar, claim CTA & building focus
+                <span className="text-[10px] text-[#70625B] leading-snug">
+                  Spawn pins, player radar, claim CTA & tapped landmark outline
                 </span>
               </div>
             </div>
-            <span className="text-[10px] font-mono font-bold text-[#F16321]">
+            <span className="text-[10px] font-mono font-bold text-[#F16321] shrink-0">
               #F16321
             </span>
           </div>
